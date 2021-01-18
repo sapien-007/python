@@ -114,9 +114,9 @@ for row in range(0,len(df)):
     df.iat[row,index_first_name] = first_name
     df.iat[row,index_middle_name] = middle_name    
     
-df_final = df[['PassengerId', 'Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp',
+df_final = df[['PassengerId', 'Survived', 'Pclass', 'Sex', 'Age', 'SibSp',
        'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked','Title',
        'First_Name','Middle_Name','Lst_Name', 
        'Maiden_Name','Suffix']]
-
-df_final.columns 
+df_final.loc[:,['Name']] = train_df['Name']
+df_final.columns
