@@ -1,0 +1,122 @@
+import pandas as pd
+train_df = pd.read_csv(r"C:\Users\mukes\Python\Mukesh Temp-Work\train.csv")
+train_df.shape
+train_df.describe()
+import re
+title_pattern = r'(\D+\.)'
+name_pattern = r'(\.\s\D+)'
+df = train_df.copy()
+df['Lst_and_Title'] = None
+index_lst_and_Title = df.columns.get_loc('Lst_and_Title')
+index_Name = df.columns.get_loc('Name')   
+print("Name index is : ", index_Name)
+print("Title index is : " , index_lst_and_Title)
+print("Number of rows in train_df is : ", len(df))
+
+for row in range(0, len(train_df)):
+    lst_and_title = re.search(title_pattern,df.iat[row,index_Name]).group()
+    name = re.search(name_pattern,df.iat[row,index_Name]).group()
+    name = name.replace(".",'')
+    lst_and_title = lst_and_title.replace(".",'')
+    df.iat[row,index_lst_and_Title] = lst_and_title
+    df.iat[row,index_Name] = name
+    
+df['Lst_Name'] = None
+df['Title'] = None
+title1_pattern = r'(\,\D+)'
+index_Lst_Name = df.columns.get_loc('Lst_Name')
+index_Title = df.columns.get_loc('Title')
+lastname_pattern = r'(\D+\,)'
+for row in range(0, len(df)):
+    title1 = re.search(title1_pattern,df.iat[row,index_lst_and_Title]).group()
+    lstname = re.search(lastname_pattern,df.iat[row,index_lst_and_Title]).group()
+    lstname = lstname.replace(",",'')
+    title1 = title1.replace(",",'')
+    df.iat[row,index_Title] = title1
+    df.iat[row,index_Lst_Name] = lstname
+
+#df.drop(['First_and_Middle'],axis=1,inplace=True)
+maiden_pattern = r"\(\D+\)"
+df['Maiden_Name'] = None
+index_maiden_name = df.columns.get_loc('Maiden_Name')
+df['First_and_Middle_Suffix'] = None
+index_first_and_middle = df.columns.get_loc('First_and_Middle_Suffix')
+f_and_l_pattern = r"\D+\("
+for row in range(0,len(df)):
+    try:
+        maiden = re.search(maiden_pattern,df.iat[row,index_Name]).group()
+    except:
+        maiden = " "
+    try:
+        first_last = re.search(f_and_l_pattern,df.iat[row,index_Name]).group()
+    except:
+        first_last = df.iat[row,index_Name]
+    maiden = maiden.replace('(','')
+    maiden = maiden.replace(')','')
+    first_last = first_last.replace('(','')
+    df.iat[row,index_maiden_name] = maiden
+    df.iat[row,index_first_and_middle] = first_last
+    
+    
+#name1 = ' John Bradley (Florence Briggs Thayer)'
+#name2 = 'Tom Hats'
+#maiden_name1 = re.search(r"\(\D+\)",name1).group()     
+ 
+df['Suffix'] = None
+index_suffix = df.columns.get_loc('Suffix')
+
+
+for row in range(0,len(df)):
+    try:
+        suffix= re.search("\s+Jr$|\s+Jr\s$", df.iat[row,index_first_and_middle]).group()
+    except:
+        try:
+            suffix= re.search("\s+II$", df.iat[row,index_first_and_middle]).group()        
+        except:
+            suffix = ''
+    df.iat[row,index_suffix] = suffix
+
+df['First_Middle'] = None
+index_first_middle = df.columns.get_loc('First_Middle')
+
+for row in range(0,len(df)):
+    try:
+        first_middle1 = df.iat[row,index_first_and_middle].split(df.iat[row,index_suffix])
+        first_middle  = first_middle1[0]
+    except:
+        first_middle = df.iat[row,index_first_and_middle]
+    df.iat[row,index_first_middle] = first_middle        
+
+p1 = re.compile(r'^(?P<FIRST_NAME>.+)(\s+)(?P<MIDDLE_NAME>.+)$', re.IGNORECASE) 
+p2 = re.compile(r'^(?P<FIRST_NAME>.+)(\s*)$', re.IGNORECASE) 
+df['First_Name'] = None
+df['Middle_Name'] = None
+index_first_name = df.columns.get_loc('First_Name')
+index_middle_name = df.columns.get_loc('Middle_Name')
+
+for row in range(0,len(df)):
+    try:
+        m=p1.match(df.iat[row,index_first_middle])
+        if(m != None):
+            first_name = m.group('FIRST_NAME')
+            middle_name = m.group('MIDDLE_NAME')
+        else:
+            m=p2.match(df.iat[row,index_first_middle])
+            if(m != None):
+                first_name = m.group('FIRST_NAME')
+                middle_name = ''                    
+            else:
+                first_name = ''
+                middle_name = ''        
+    except:
+        first_name = ''
+        middle_name = ''        
+    df.iat[row,index_first_name] = first_name
+    df.iat[row,index_middle_name] = middle_name    
+    
+df_final = df[['PassengerId', 'Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp',
+       'Parch', 'Ticket', 'Fare', 'Cabin', 'Embarked','Title',
+       'First_Name','Middle_Name','Lst_Name', 
+       'Maiden_Name','Suffix']]
+
+df_final.columns 
