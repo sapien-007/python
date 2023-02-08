@@ -1,0 +1,33 @@
+import json
+import pandas as pd
+
+# Load the JSON data into a Python object
+json_data = '{"person": {"name": "John", "age": 32, "address": {"city": "New York", "state": "NY"}}}'
+data = json.loads(json_data)
+
+# Flatten the nested JSON
+def flatten_json(nested_json, delimiter='_'):
+    out = {}
+    
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + delimiter)
+        elif type(x) is list:
+            i = 0
+            for a in x:
+                flatten(a, name + str(i) + delimiter)
+                i += 1
+        else:
+            out[name[:-1]] = x
+    
+    flatten(nested_json)
+    return out
+
+flat_data = flatten_json(data)
+
+# Convert the flattened JSON to a Pandas dataframe
+df = pd.DataFrame(flat_data, index=[0])
+
+# Write the dataframe to a CSV file
+df.to_csv('data.csv', index=False)
