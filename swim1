@@ -1,0 +1,33 @@
+```mermaid
+  %% Sample Swimlane Diagram
+  
+  graph TD;
+  
+  subgraph Lane A
+    a1((Task 1));
+    a2((Task 2));
+  end
+  
+  subgraph Lane B
+    b1((Task 3));
+    b2((Task 4));
+    b3((Task 5));
+  end
+  
+  subgraph Lane C
+    c1((Task 6));
+    c2((Task 7));
+    c3((Task 8));
+  end
+  
+  subgraph Lane D
+    d1((Task 9));
+  end
+  
+  a1 --> b1;
+  b1 --> c1;
+  c1 --> d1;
+  a2 --> b2;
+  b2 --> c3;
+  c3 --> d1;
+  b3 --> c2;
