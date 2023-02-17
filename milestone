@@ -1,0 +1,19 @@
+graph LR;
+  A(Project Start Mar-1-2023);
+  B(Analysis);
+  C(Build);
+  D(Test);
+  E(Release to Production);
+  
+  A --> B;
+  A --> C;
+  A --> D;
+  B --> C;
+  C --> D;
+  D --> E;
+  
+  style A fill:#f9f,stroke:#333,stroke-width:4px;
+  style B fill:#ffe6cc,stroke:#333,stroke-width:4px;
+  style C fill:#fff2cc,stroke:#333,stroke-width:4px;
+  style D fill:#e6f3ff,stroke:#333,stroke-width:4px;
+  style E fill:#d9ead3,stroke:#333,stroke-width:4px;
