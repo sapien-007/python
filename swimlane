@@ -1,0 +1,35 @@
+```mermaid
+  %% Example Swimlane Diagram
+  
+  graph TD;
+  
+  subgraph Customer
+    c1((Customer))
+  end
+  
+  subgraph Order Fulfillment
+    of1((Order Received));
+    of2((Order Processed));
+    of3((Order Shipped));
+  end
+  
+  subgraph Accounts Receivable
+    ar1((Invoice Sent));
+    ar2((Payment Received));
+  end
+  
+  subgraph Inventory Management
+    im1((Inventory Updated));
+  end
+  
+  c1 --> of1;
+  of1 --> of2;
+  of2 --> of3;
+  of3 --> ar1;
+  ar1 --> ar2;
+  ar2 --> im1;
+This code will create a simple swimlane diagram with four lanes: Customer, Order Fulfillment, Accounts Receivable, and Inventory Management. The diagram shows the process flow from the customer placing an order, to the order being processed and shipped, to the invoice being sent, to the payment being received, and finally to the inventory being updated. Note that the graph TD; statement at the beginning of the code specifies that this is a top-down flowchart. You can modify the content of each lane and the arrows connecting them to suit your specific needs.
+
+
+
+
